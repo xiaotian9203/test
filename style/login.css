@@ -1,0 +1,86 @@
+.modal-body{
+	padding: 0;
+}
+.bgM{
+	/*background-color: #DEDEDE;*/
+	background-color: #F5F5F5;
+	/*background-image: url(../img/login3.jpg);*/
+	/*background-repeat: no-repeat;*/
+	/*background-clip:content-box;
+	background-size:cover;*/
+}
+.login_validation{
+	height: 150px;
+	margin-top: 10%;
+}
+.wxqr_height{
+	height: 300px;
+}
+.wxqrimg_height{
+	height: 250px;
+}
+/*帐号登录*/
+.loginGroup{
+	width: 100%;
+}
+.loginGroup .accountname_input:focus{
+		border-color:#cfdadd !important;
+}
+.validateCode_input{
+	width: 40%;
+}
+.loginGroup .accountpassword_span,.loginGroup .accountname_span{
+	width: 18%;
+	max-width: 19%;
+}
+.loginGroup .accountname_input,.loginGroup .accountpassword_div{
+	width: 80%;
+	padding:0 8px;
+
+}
+.margin_top{
+	margin-top:5%;
+}
+.accountpassword_div .password{
+	width: 88%;
+	height: 100%;
+	padding:0 !important;
+}
+/*密码眼*/
+.loginGroup .accountpassword_div .passwordEye{
+	width: 9%;
+	cursor: pointer;
+}
+.loginBtn_div{
+	width: 100%;
+	margin-top: 2%;
+}
+.loginBtn_div button{
+	width: 30%;
+}
+/*角色弹框*/
+.roleChoseUl{
+	width: 100%;
+	/*height: 100%;*/
+	text-align: center;
+	padding: 0;
+	margin:0;
+}
+.roleChoseUl li{
+	width: 100%;
+	height: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-bottom:1px solid #EEEEEE;
+}
+.roleChoseUl li:last-child{
+	border:none;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+.roleChoseUl li:hover{
+	color: #ffffff;
+	background-color: #3399CC;
+	cursor: pointer;
+}

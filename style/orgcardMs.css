@@ -1,0 +1,76 @@
+#cardSelectDiv , #cardChoseDiv{
+	width: 100%;
+	height: 20%;
+}
+.excelUpdateDiv{
+	width: 100%;
+	height: 20%;
+}
+.overflow-Hidden{
+	overflow-y: hidden;
+}
+.margin-bottom1{
+	margin-bottom: 1%;
+}
+.margin-bottom2{
+	margin-bottom: 2%;
+}
+.margin-top5{
+	margin-top: 5%;
+}
+.margin-top3{
+	margin-top: 3%;
+}
+.flex-direction{
+	flex-direction: column;
+}
+#cardselect , #cardChoseSelect{
+	width: 25%;
+	min-height: 20px;
+	border:1px solid #eaeff0;
+	display: inline-block;
+	padding: 1%;
+}
+.cardDeviceQuery_pagediv{
+	width: 50%;
+}
+
+/* PC客户端或大屏幕设备: 1366px 至更大 */
+@media only screen and (min-width: 1367px) {
+	.card_deviceInput{
+		width: 23%;
+	}
+}
+.nextStep{
+	width: 10%;
+	/*height: 35px;*/
+	/*margin-left: 60%;*/
+	/*margin-top: -3.3%;*/
+}
+.nextStep button{
+	height: 100%;
+}
+.black{
+	color: #000000;
+}
+/*存放设备刷卡信息*/
+#cardMsDiv{
+	width: 25%;
+	height: 200px;
+	border:1px solid #EEEEEE;
+}
+/*手动添加卡号*/
+.list-group-item{
+	padding:10px 0px !important;
+}
+.personInput{
+	border:1px solid #edf1f2;
+	padding:10px 0px;
+}
+/*卡号排序颜色*/
+.numberSortAfter , .recordTimeSortAfter{
+	color: #BBBBBB;
+}
+.numberSortBefore , .recordTimeSortBefore{
+	color: #000000;
+}

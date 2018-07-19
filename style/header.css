@@ -1,0 +1,328 @@
+/*左侧栏标题*/
+.navbar-title{
+	width: 100%;
+}
+.text-style{
+	margin:0;
+}
+.padding{
+	padding:0 !important;
+}
+.padding-bottom0{
+	padding-bottom:0px;
+}
+.z-index{
+	z-index: 1050 !important;
+}
+.overflow-auto{
+	overflow: auto !important;
+}
+/*弹框的top*/
+.top10{
+	top: 10% !important;
+}
+.top2{
+	top:2% !important;
+}
+.top5{
+	top:5% !important;
+}
+.top15{
+	top:15% !important;
+}
+.top20{
+	top:20% !important;
+}
+
+.pRight_10Percent{
+	padding-right: 10%;
+}
+.margin{
+	margin: 0;
+}
+.mTop_1Percent{
+	margin-top: 1% !important;
+}
+.mLeft_1Percent{
+	margin-left: 1% !important;
+}
+.mLeft_2Percent{
+	margin-left: 2% !important;
+}
+.mRight_1Percent{
+	margin-right: 1%;
+}
+.mRight_2Percent{
+	margin-right: 2% !important;
+}
+.mRight_10Percent{
+	margin-right: 10% !important;
+}
+.mRight_20Percent{
+	margin-right: 20%;
+}
+.mtop10Percent{
+	margin-top: 10% !important;
+}
+.m1percent{
+	margin:1% !important;
+}
+.mbottom_3Percent{
+	margin-bottom: 3% !important;
+}
+.mbottom_30Percent{
+	margin-bottom: 30%;
+}
+.float-r{
+	float: right;
+}
+.float-l{
+	float: left;
+}
+.height_100{
+	height: 100%;;
+}
+/*弹框的宽度*/
+.width_8{
+	width:8% !important;
+}
+.width_10{
+	width:10% !important;
+}
+.width_13{
+	width: 13% !important;
+}
+.width_14{
+	width: 14% !important;
+}
+.width_15{
+	width: 15% !important; 
+}
+.width_16{
+	width: 16% !important;
+}
+.width_20{
+	width: 20% !important;
+}
+.width_24{
+	width: 24% !important;
+}
+.width_25{
+	width: 25% !important;
+}
+.width_30{
+	width: 30% !important;
+}
+.width_50{
+	width: 50% !important;
+}
+.width_60{
+	width:60% !important;
+}
+.width_74{
+	width: 74% !important;
+}
+.width_75{
+	width: 75% !important;
+}
+.width_80{
+	width:80% !important;
+}
+.width_85{
+	width:85%  !important;
+}
+.width_100{
+	width: 100% !important;
+}
+.text-l{
+	text-align: left;
+}
+.pointer{
+	cursor:pointer;
+}
+.nocursor{
+	cursor: none;
+}
+.cursor-Default{
+	cursor: default !important;
+}
+.border-top{
+	border-top:1px solid #eee;
+}
+.flex{
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+}
+.flex-end{
+	justify-content: flex-end;
+}
+.flex-colDirection{
+	flex-direction: column;
+}
+.flex-rowDirection{
+	flex-direction: row;
+}
+.disabled{
+	color: #CCCCCC;
+}
+.inline_block{
+	display: inline-block;
+}
+.red{
+	color:red;
+}
+.nopadding_bottom{
+	padding-bottom: 0;
+}
+/*小手*/
+.cursor{
+	cursor: pointer !important;
+}
+/*取消a的小手*/
+.aDefault{
+	cursor: default;
+}
+/*弹框关闭x样式*/
+.modelclose{
+	width: 20%;
+}
+/*移除input默认样式*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+input[type="number"]{
+  -moz-appearance: textfield;
+}
+/*去掉浏览器默认的xx和密码查看按钮*/
+input::-ms-clear, ::-ms-reveal{display: none;}
+
+/*表格分页的ul*/
+/*.pagination{
+	display: flex;
+	justify-content: center;
+	align-items: center; 
+	margin:20px 0;
+}
+*/
+.img2{
+	width: 100% !important;
+	height: 30% !important;
+}
+.text-center{
+	text-align: center !important;
+	vertical-align: middle !important;
+}
+/*表格*/
+.table-responsive table{
+	overflow: auto;
+}
+/*超出的字数隐藏*/
+.table-responsive table td{
+	/*width: 20px !important;*/
+	/*max-width: 30px !important;*/
+	
+}
+.table-responsive table td{
+	overflow: hidden;
+	text-overflow: ellipsis;
+    /*white-space: nowrap;*/
+}
+/*鼠标移上去显示全部的字数*/
+.table-responsive table td:hover{
+	cursor: pointer;
+	overflow: visible;
+    white-space: normal;
+}
+td, th, label.i-switch{
+	text-align: center !important;
+	padding:8px 0px  !important;
+	vertical-align: middle !important;
+}
+/*已禁用*/
+.isDisabled{
+	background-color:lightcoral!important;
+	color: #fff !important;
+} 
+/*显示页数下拉框*/
+#selectPage{
+	width:30%;
+}
+/*查询输入框*/
+.searchDiv{
+	height: 52px;
+	border:1px solid #eaeff0;
+	border-radius:2px;
+	padding:8px 15px;
+	margin-top:5px;
+}
+.searchDiv>div{
+	padding:0;
+}
+.searchInput, .companySearch, #selectPage{
+	height:35px;
+	outline:none;
+	border: 1px solid #eaeff0;
+	border-radius:2px;
+	display: inline-block;
+	background-color: #fff;
+	text-align: center;
+	font-size: 14px;
+	box-shadow: none;
+	-webkit-box-shadow:none;
+	/*margin-right:1%;*/
+}
+.searchInput{
+	width: 20%;
+}
+/*设备、规则input*/
+.deviceInput , .ruleInput{	
+	width:24%;
+}
+div.deviceInput, div.ruleInput{
+	border:none;
+	background: none;
+}
+div.deviceInput button, div.ruleInput button{
+	height: 35px;
+	border: 1px solid #eaeff0;
+	border-radius:2px;
+}
+.searchBtn, .addBtn{
+	height: 35px;
+	border: 1px solid #eaeff0;
+	box-shadow: none;
+	-webkit-box-shadow:none;
+	box-shadow:none;
+}
+/*编辑页面editperson的tr*/
+.editMsTr input{
+	width:100%;
+	border:none;
+	text-align:center;
+	background: none
+}
+/*.editTr td.operate{
+	padding:0 !important;
+}*/
+.editMsTr td.operate button{
+	border:none;
+}
+
+/*禁用的字体颜色*/
+.tdDisable{
+	color: #ccc
+}
+/*添加设备每个输入框的div*/
+.deviceForm .list-group-item{
+	margin-bottom: 15px;
+	border-radius: 3px
+}
+/*设备注册返回按钮*/
+.dRegCancelBtn{
+	display: block;
+	width: 30%;
+	margin-left: 35%;
+	margin-top:10%;
+}

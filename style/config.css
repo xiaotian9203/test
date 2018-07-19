@@ -1,0 +1,74 @@
+*{margin:0px;padding:0px;}
+.defaultSettingDiv{
+	width: 40%;
+}
+.defaultSettingInput{
+	width: 60%;
+	display: inline-block !important;
+	text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+/*设置默认配置确定按钮*/
+.setBtn{
+	width: 90%;
+	margin-left: 5%;
+}
+/*默认设备选择全选div*/
+.allFlag{
+	justify-content: flex-end;
+}
+input[type=checkbox]{
+	margin:0 !important;
+	vertical-align: middle;
+	width: 20px;
+	height: 20px;
+}
+
+
+/*.i-switch-md input:checked + i::after{
+	-moz-margin-left: 8px !important;
+	-webkit-margin-left:17px;
+	margin-left: 17px;
+}
+.i-switch-md i::after{
+	-moz-margin-left: -29px !important;
+	-webkit-margin-left:16px;
+	margin-left: 16px;
+}*/
+/*.i-switch-md{
+	width: 60px;
+}*/
+@-moz-document url-prefix() { 
+	.i-switch-md i::after {
+	    margin-left: -1px 
+	}
+  	.i-switch-md input:checked + i::after{
+    	margin-left: -20px
+  	}
+  	.i-switch input:checked + i::before{
+	  	position: absolute;
+		top: -1px;	
+		right: -1px;
+		bottom: -1px;	
+		left: -1px;	
+		background-color: #fff;	
+		border: 1px solid #f0f0f0;	
+		border-radius: 30px;
+		content: "";
+		transition: all .2s;
+  	}
+  	.i-switch i::before{
+  		position: absolute;
+		top: -1px;	
+		bottom: -1px;
+		right: auto;	
+		left: -1px;		
+		background-color: #fff;	
+		border:none;
+		border-radius: 30px;				
+		content: "";		
+		-webkit-transition: all .2s;
+		transition: all .2s;
+  	}
+}

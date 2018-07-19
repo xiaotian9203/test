@@ -1,0 +1,221 @@
+<div class="bg-light lter b-b wrapper-md">
+  <h1 class="m-n font-thin h3">刷卡管理</h1>
+</div>
+<div class="wrapper-md">
+  	<div class="panel panel-default">
+	  	<tabset class="tab-container margin">
+	  		<tab class="tab" heading="卡号列表" ng-click="cardQuery()">
+			  	<div class="panel-heading heading-null" ng-show="cardRemindDisplay==true" ng-bind="cardRemind"></div>
+			    <div class="panel-heading" ng-show="cardDisplay==true">
+		      	<div  class="form-group searchDiv flex">
+			      	<div class="col-md-2  text-center ">
+			          <span>每页显示</span>
+				        <select  id="selectPage" class="text-center" ng-model="cardQueryMs.selectPage"  ng-options="item as item for item in showPages" ng-change="cardQuery()" >
+				        </select>
+				        <span >条数据</span>
+			        </div>
+			        <div class="col-md-10 col-xs-12 flex">
+		          	<input type="text" class="cardInput mLeft_1Percent" name="cardnum" ng-model="cardQueryMs.cardnumber" placeholder="卡号"  />
+		          	<select  id="cardQuerySelect" class="  text-center mLeft_1Percent" name=""  ng-model="cardQueryMs.bindingsStatus"  ng-options="item.bindingsStatus as item.text for item in bindingsStatusSelection">    
+		           		<option value="" hidden="hidden">按卡状态搜索</option>
+			        	</select>
+		          	<select  id="cardTypeSelect" class="  text-center mLeft_1Percent" name=""  ng-model="cardQueryMs.cardtype"  ng-options="item.cardtype as item.text for item in cardsQuerySelection">    
+		           		<option value="" hidden="hidden">按卡类型搜索</option>
+			        	</select>
+		          	<button class="btn btn-primary icon icon-magnifier searchBtn" ng-click="cardQuery(0)"> 搜索</button>   
+		        	</div>     
+		      	</div>
+		      	<div class="table-responsive">
+		        	<table ng-table="card.tableParams" class="table table-condensed table-bordered table-striped text-center">
+		          	<thead>
+			            <tr>
+				            <th>
+				            	卡号
+				            	<!--<span class="inline_block width_8 cursor fa fa-sort-alpha-asc" title="升序" ng-class=" numberascColor" ng-click="cardQuery(1,'up')"></span> 
+				            	<span class="inline_block width_8 cursor fa fa-sort-alpha-desc" title="降序" ng-class="numberdescColor" ng-click="cardQuery(1,'down')"></span>-->
+				            </th>
+				            <th>卡类型</th>
+				            <th>绑定状态</th>
+				            <th>卡状态</th>
+				            <th>操作</th>
+			            </tr>
+		          	</thead>
+	          		<tbody>   
+			            <tr ng-repeat="row in cards" class="text-center">
+				            <td ng-bind="row.cardNumber || '' "></td>
+				            <td ng-bind="cardsQuerySelection[row.cardType-1].text || '' "></td>
+				            <td ng-bind="bindingsStatusSelection[row.bindingsStatus].text || ''"></td>
+				            <td>
+				            	<select id="cardStateSelect" class="text-center mLeft_1Percent" ng-model="row.cardStatus"  ng-options="item.cardStatus as item.text for item in cardStatusSelection" ng-Change="cardModifyState(row)">
+					        		</select>
+				            </td>
+				            <td>
+				            	<button class="btn btn-info" ng-click="cardunRegister(row)">注销</button>
+				            </td>
+			            </tr>
+	          		</tbody>
+        			</table>
+		        	<div class="cardsQuery_pagediv"></div>
+		      	</div>
+			    </div>
+				</tab>
+	  		<tab class="tab" heading="刷卡导入" ng-click="cardMsInit()">
+	  			<div id="" class="width_100 flex ">
+	  				<div id="cardSelectDiv" class="flex margin-bottom1 flex-direction align-flexStart width_25">
+							<span>选择导入方式:</span>
+							<select  id="cardselect" class="text-center list-group-item" ng-model="creditCardMs.cardType" ng-options="item.CardType as item.text for item in creditCardTypeMs" ng-change="creditCardType_Select(CardType)">               
+		          </select>		
+		  			</div>	
+	  			</div>
+  				<!--手动输入添加-->
+	  			<div ng-show="creditCardMs.cardType==0">
+	  				<div class="m-b-lg flex">
+		        	<form  name="form" class="form-validation deviceForm flex flex-direction width_50">
+		          	<div class="list-group list-group-sm width_50">
+		          		<span>*卡号：</span>
+			            <div class="list-group-item">
+			              <input type="text" class="no-border width_100" name="cardNumber" ng-model="cardMs.cardnumber" value="" placeholder="请输入卡号"  />
+			            </div>   
+			            <span>*卡类型：</span>
+			            <div class="list-group-item">
+			              <select  id="cardTypeQuerySelect" class="text-center no-border width_100" name="cardtype"  ng-model="cardMs.cardType"  ng-options="item.cardtype as item.text for item in cardsQuerySelection">
+				        		</select>
+			            </div>
+			            <span>手机号：</span>
+			            <div class="list-group-item">
+			               <input type="number" class="no-border width_100" name="phoneNum" ng-model="cardMs.phone" value="" placeholder="请输入手机号" />
+			            </div>
+			            <span>邮箱：</span>
+			            <div class="list-group-item">
+			               <input type="text" class="no-border width_100" name="Email" ng-model="cardMs.email" value="" placeholder="请输入邮箱"/>
+			            </div>
+			            <span>卡属性：</span>
+			            <div class="list-group-item no-border">	
+			          		<textarea name="cardproperty" class="search-input width_100" rows="5" cols="30" ng-model="cardMs.cardproperty" placeholder="卡属性"></textarea>
+			            </div>       
+			          </div>
+		          	<div class="text-danger text-center" ng-show="authError" ng-bind="authError"></div>
+		          	<button type="submit" class="btn btn-lg btn-primary btn-block width_50" ng-click="addCard ()">确定</button>         
+			        </form>
+				   	</div>
+			    </div>
+	  			<!--excel导入-->
+	  			<div ng-show="creditCardMs.cardType==1" class="flex flex-direction excelUpdateDiv margin-top3">
+	  				<div class="button pointer border-default width_25" ngf-select ng-model="file" name="file">
+	  					<!--点此选择上传的文件-->
+	  					<!--<div class="flex width_85">-->
+            	<button class="btn btn-info width_100 margin-top3" >点此选择上传的文件</button>	 
+            	<!--</div>-->        		
+	          </div>   	 
+        		<input type="text" class="form-control disabled width_25 black mTop_1Percent" disabled ng-if="file" ng-model="file.name"/>
+	        	<div class="flex width_85" ng-show="file">
+	        		<button type="submit" class="btn  btn-primary width_30 margin-top3" ng-click="excelSubmit(file)" >上传</button>	 
+	        	</div>		            	
+	  			</div>
+				</tab>	
+				<tab class="tab" heading="卡与微信绑定查询" ng-click="cardWxQuery()">
+				<div class="panel-heading heading-null" ng-show="cardWxRemindDisplay==true" ng-bind="cardWxRemindText"></div>
+		    <div class="panel-heading" ng-show="cardWxDisplay==true">
+	      	<div  class="form-group searchDiv flex">
+		      	<div class="col-md-2  text-center ">
+		          <span>每页显示</span>
+			        <select  id="selectPage" class="text-center" ng-model="cardWxQueryMs.wxCardSelectPage"  ng-options="item as item for item in showPages" ng-change="cardQuery()" >
+			        </select>
+			        <span >条数据</span>
+		        </div>
+		        <div class="col-md-10 col-xs-12 flex">
+	          	<input type="text" class="searchInput visitorMs-Input mLeft_1Percent" name="phonenum" ng-model="cardQueryMs.cardnumber" placeholder="卡号"  />
+	          	<select  id="cardTypeSelect" class="searchInput deviceInput text-center mLeft_1Percent" name=""  ng-model="cardQueryMs.cardtype"  ng-options="item.cardtype as item.text for item in cardsQuerySelection">    
+	           		<option value="" hidden="hidden">按卡类型搜索</option>
+		        	</select>
+	          	<button class="btn btn-primary icon icon-magnifier searchBtn" ng-click="cardWxQuery()"> 搜索</button>   
+		        </div>     
+	      	</div>
+	      	<div class="table-responsive">
+	        	<table ng-table="card.tableParams" class="table table-condensed table-bordered table-striped text-center">
+	          	<thead>
+		            <tr>
+			            <th>卡号</th>
+			            <th>卡类型</th>
+			            <th>绑定状态</th>
+			            <th>卡状态</th>
+			            <th>微信名称</th>
+			            <th>手机号</th>
+			            <th>邮箱</th>
+			            <th>操作</th>
+		            </tr>
+	          	</thead>
+          		<tbody>   
+		            <tr ng-repeat="row in cards" class="text-center">
+			            <td ng-bind="row.cardNumber || '' "></td>
+			            <td ng-bind="cardsQuerySelection[row.cardType-1].text || '' "></td>
+			            <td ng-bind="bindingsStatusSelection[row.bindingsStatus].text || ''"></td>
+			            <td ng-bind="cardStatusSelection[row.cardStatus].text"></td>
+			            <td ng-bind="row.wxName || ''"></td>
+			            <td ng-bind="row.phone || ''"></td>
+			            <td ng-bind="row.email || ''"></td>
+			            <td>
+			            	<button class="btn btn-info" ng-click="wxAndCardChose(row)">解绑</button>
+			            </td>
+		            </tr>
+          		</tbody>
+    				</table>
+	        	<div class="cardsWxQuery_pagediv"></div>
+	      	</div>
+		    </div>
+			</tab>
+		</tabset>
+  </div>
+</div>
+<!-- 蒙版 -->
+<div class="modal-backdrop fade in" ng-class="{in: animate}" ng-style="{'z-index': 1040 + (index &amp;&amp; 1 || 0) + index*10}"  modal-backdrop="" ng-show="cardWxFadeDisplay==true" style="z-index: 1040;" >	
+</div>
+<!--解绑方式选择弹框内容 -->
+<div class="modal fade z-index flex " id="wxlistModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: {{wxUniteDisplay}}" ng-show="wxUnite_Display==true">
+    <div class="modal-dialog width_20" role="document">
+      	<div class="modal-content">
+	        <div class="modal-header">      
+	          	<button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="wxUniteChoseClose()">
+		        	<span aria-hidden="true" >&times;</span>
+		        </button>
+		      	<h5 class="modal-title" id="myModalLabel">选择解绑方式</h5>
+	        </div>
+	        <div class="modal-body" >
+	        	<ul class="ChoseUl">
+	        		<li ng-repeat="row in wxUniteList"  ng-click="wxUniteListFun(row)">
+	        			{{row.text}}
+	        		</li>
+	        	</ul>
+	        </div>
+      	</div>
+    </div>
+</div>
+<!--解绑-更换手机号或邮箱弹框-->
+<div class="modal fade z-index  flex" id="uniteEditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display:{{uniteEditDisplay}};" ng-show="uniteEdit_Display==true">
+  <div class="modal-dialog width_30" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="uniteEditClose()">
+          <span aria-hidden="true" >&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">绑定新的手机号或邮箱</h4>
+      </div>
+      <div class="modal-body">
+        <div class="modal-common flex">
+        	<div class="editGroupDiv width_50 ">
+         		<span>手机号：</span>        			
+            <input  type="number" maxlength="11" class="width_60" ng-model="EditUntieMs.phonenum"/>  
+         	</div>
+         	<div class="editGroupDiv width_50 ">
+         		<span>邮箱：</span>        			
+            <input  type="email" class="width_60"  ng-model="EditUntieMs.email"/> 
+         	</div>
+        </div>
+      </div>
+     	<div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="wxAndCardEditUntie()">确定</button>
+        <button type="button" class="btn btn-default" ng-click="uniteEditClose()">取消</button>
+      </div>
+    </div>
+  </div>
+</div>

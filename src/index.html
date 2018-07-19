@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myapp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="bundle.css">
+    <link rel="stylesheet" href="vendor.css">
+    <script src='vendor.js'></script>
+    <script src='bundle.js'></script>
+    <!--<script src="config.js"></script>
+    <script src="config.lazyload.js"></script>
+    <script src="config.router.js"></script>
+    <script src="config.url.js"></script>
+    <script src="main.js"></script>
+    <script src="app.js"></script>-->
+</head>
+<body ng-controller="AppCtrl" style="background-image: url(../assets/images/login3.jpg);background-attachment:fixed;background-repeat: no-repeat;background-size: cover;background-position:center;">
+  <div class="app"  id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view></div>
+</body>
+</html>

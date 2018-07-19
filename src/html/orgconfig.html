@@ -1,0 +1,144 @@
+<div class="bg-light lter b-b wrapper-md">
+  <h1 class="m-n font-thin h3">组织配置管理</h1>
+</div>
+<div class="wrapper-md">
+  <div class="panel panel-default">
+  	<tabset class="tab-container margin">
+	    <tab class="tab" heading="组织配置信息" ng-click="getorgconfig()" >
+	    	<div class="heading-null" ng-show="remindDisplay==true">暂无配置信息</div>
+				<div class="panel-heading" ng-show="remindDisplay==false">	 
+		      <!-- 组织配置信息-->
+			    <div class="table-responsive">
+		        <table ng-table="person.tableParams" class="table table-condensed table-bordered table-striped text-center">
+			        <thead>
+			          <tr>
+			          	<th>参数名称</th>
+			          	<th>配置类型</th>
+			          	<th>参数内容</th>
+			          	<th>操作</th>
+			          </tr>
+			      	</thead>
+		      		<tbody>   
+		            <tr ng-repeat="row in configMs " class="text-center">
+	                <td ng-bind="row.orgConfigName || '' "></td> 
+	                <td ng-if="row.orgConfigType==1">数字</td>
+	                <td ng-if="row.orgConfigType==2">字符串</td>
+	                <td ng-if="row.orgConfigType==3">电话</td>
+	                <td ng-if="row.orgConfigType==4">Email</td>
+	                <td ng-if="row.orgConfigType==5">网址</td>
+	                <td ng-if="row.orgConfigType>5 || row.orgConfigType<1 || row.orgConfigType==undefined">其他</td>
+	                <td ng-bind="row.orgConfigValue || '' "></td>
+	                <td  class="text-center  control-label">
+	                	<button class="btn btn-link"  ng-click="edit(row)">编辑</button>
+	                </td>
+		            </tr>
+			        </tbody>
+				    </table>
+			   	</div>
+				</div>
+			</tab>
+			<tab class="tab" heading="小程序绑定查询" ng-click="queryWxapp()">
+				<div class="heading-null" ng-show="wxAppRemindDisplay==true">暂无小程序信息</div>
+				<div class="panel-heading" ng-show="wxAppRemindDisplay==false">	
+			    <div class="table-responsive">
+		        <table ng-table="person.tableParams" class="table table-condensed table-bordered table-striped text-center">
+			        <thead>
+			          <tr>
+			          	<th>组织名称</th>
+			          	<th>小程序名称</th>
+			          	<th>小程序APPID</th>
+			          	<th>小程序密钥</th>
+			          	<th>操作</th>
+			          </tr>
+			      	</thead>
+		      		<tbody>   
+		            <tr ng-repeat="row in WxappsMs " class="text-center">
+	                <td ng-bind="row.orgName || '' "></td> 
+	                <td ng-bind="row.wxSpappName || '' "></td>
+	                <td ng-bind="row.wxSpappId || '' "></td>
+	                <td ng-bind="row.wxSpappsecret || '' "></td>
+	                <td  class="text-center  control-label">
+	                	<button class="btn btn-link"  ng-click="orgAndWxUntie(row)">解绑</button>
+	                </td>
+		            </tr>
+			        </tbody>
+				    </table>
+			   	</div>
+				</div>
+			</tab>
+			<tab class="tab" heading="小程序配置" >
+				<div class="container defaultSettingDiv w-auto-xs">
+  				<a href class="navbar-brand block m-t">小程序配置</a>
+	      	<div class="m-b-lg">
+	        	<form  name="form" class="form-validation deviceForm">
+	          	<div class="list-group list-group-sm">
+		            <div class="list-group-item flex no-border">
+		            	<span class="width_30 text-r">小程序名称:</span>
+		              <input type="text" placeholder="小程序名称"  title="" class="form-control cursor defaultSettingInput" ng-model="wxBindMs.wxSpappName" ng-focus="WxBindFocus()">
+		            </div>   
+		            <div class="list-group-item flex no-border">
+		            	<span class="width_30 text-r">小程序APPID:</span>	            
+		            	<input type="text" placeholder="APPID"  title="" class="form-control cursor defaultSettingInput" ng-model="wxBindMs.wxSpAppID" ng-focus="WxBindFocus()">
+		            </div>
+		            <div class="list-group-item flex no-border">
+		            	<span class="width_30 text-r">小程序密钥:</span>	            
+		            	<input type="text" placeholder="小程序密钥"  title="" class="form-control cursor defaultSettingInput" ng-model="wxBindMs.wxSpappsecret" ng-focus="WxBindFocus()">
+		            </div>
+		          </div>
+		          <div class="text-danger text-center" ng-show="authError" ng-bind="authError"></div>
+		          <button class="btn btn-info setBtn mbottom_3Percent" ng-click="orgAndWxBinding()">绑定</button>
+		        </form>
+	      	</div>
+	      </div>
+			</tab>
+		</tabset>
+	</div>
+</div>
+<!-- Modal -->
+<!-- 蒙版 -->
+<div class="modal-backdrop fade in" ng-class="{in: animate}" ng-style="{'z-index': 1040 + (index &amp;&amp; 1 || 0) + index*10}" modal-backdrop="" ng-show="display==true" style="z-index: 1040;" ></div>
+  <!-- 弹框内容 -->
+  <!--系统参数编辑弹框-->
+<div class="modal fade z-index top20"  id="systemEditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display:{{orgEdit_Display}}" ng-show="orgEditDisplay==true">
+	<div class="modal-dialog width_50" role="document">
+	  <div class="modal-content">
+	    <div class="modal-header">
+	      <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="close()" >
+	        <span aria-hidden="true" >&times;</span>
+	      </button>
+	      <h4 class="modal-title" id="myModalLabel">组织配置编辑</h4>
+	    </div>
+	    <div class="modal-body">
+	      <div class="modal-common">
+	        <table ng-table="config.tableParams" class="table table-condensed table-bordered table-striped text-center">
+	      		<thead>
+			        <tr>
+			         	<th>参数名称</th>
+			         	<th>配置类型</th>
+			          <th>参数内容</th>			            
+			        </tr>
+			      </thead>
+			      <tbody>        
+			        <tr class="text-center editMsTr">			         
+			            <td ng-bind="editData.orgconfigname || '' " class="disabled"></td>
+			            <td ng-if="editData.orgconfigtype==1">数字</td>
+	                <td ng-if="editData.orgconfigtype==2">字符串</td>
+	                <td ng-if="editData.orgconfigtype==3">电话</td>
+	                <td ng-if="editData.orgconfigtype==4">Email</td>
+	                <td ng-if="editData.orgconfigtype==5">网址</td>
+	                <td ng-if="editData.orgconfigtype>5 || editData.orgconfigtype<1 || editData.orgconfigtype==undefined">其他</td>
+			            <td>
+			            	<input type="text" class="configvalue" ng-model="editData.orgconfigvalue " />
+			            </td>		           
+			        </tr>
+			      </tbody>
+	    		</table>
+	      </div>
+	    </div>
+	    <div class="modal-footer">
+	      <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="close()">关闭</button>
+	      <button type="button" class="btn btn-primary" ng-click="updateConfig()">确定</button>
+	    </div>
+	  </div>
+	</div>
+</div>
