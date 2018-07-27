@@ -1,0 +1,4 @@
+
+Pratice.controller('loginController', function () {
+
+});

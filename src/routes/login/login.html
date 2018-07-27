@@ -1,0 +1,34 @@
+<meta charset="utf-8" />
+<div class="container w-xxl w-auto-xs bgM mTop_1Percent" ng-init="app.settings.container = false;">
+ <!--<tabset class="tab-container margin">-->
+	<!--<tab heading="帐号登录" ng-click="">-->
+	<div class="loginDiv">
+		<a href class="navbar-brand block m-t">新版门禁组织管理系统</a>
+  		<div class="m-b-lg mbottom_30Percent" >
+		    <div class="form-validation text-center login_validation ">
+	      		<div class="social-auth-links text-center">
+			     	<div class="loginGroup">
+			     		<!--<span class="accountname_span inline_block">帐号：</span>-->
+			     		<input type="text" class="form-control accountname_input inline_block" placeholder="帐号"  ng-model="loginPerson.accountname" ng-focus="focus()"/>		
+			     	</div>
+			     	<div class="loginGroup margin_top">
+			     		<!--<span class="accountpassword_span inline_block">密码：</span>-->
+			     		<div class="form-control accountpassword_div inline_block">
+			     			<input type="{{passwordType}}" placeholder="密码" class="form-control password inline_block no-border" ng-model="loginPerson.accountpassword"  ng-focus="focus()">
+	          				<span class="{{glyphicon}} inline_block passwordEye"  aria-hidden="true" ng-click="glyphiconChange()" ></span>				     		
+			     		</div>
+			     	</div>
+			     	<div class="loginGroup margin_top">
+			     		<input type="text" placeholder="验证码" class="form-control validateCode_input inline_block" ng-model="loginPerson.captchavalue"  ng-focus="focus()">
+          				<span class="fa fa-repeat glyphicon glyphicon-repeat inline_block pointer width_10 height_100" ng-click="getCaptcha()" ></span>	
+          				<image class="width_30" src="{{ValidateCodeImg}}" ></image>
+			     	</div>
+			     	<div class="text-danger wrapper text-center remind" ng-bind="authError"></div>
+			     	<div class="loginBtn_div">
+			     		<button class="btn btn-primary" ng-click="login()">登录</button>		     		
+			     	</div>			     	
+		      	</div>
+  			</div>
+		</div>
+	</div>
+</div>
