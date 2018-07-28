@@ -1,0 +1,3 @@
+Pratice.service('apiManager', function () {
+
+});
