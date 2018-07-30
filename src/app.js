@@ -1,3 +1,6 @@
+
+window.CONFIG = window.CONFIG || {};
+
 /**
  * @name Pratice
  * @type {angular.Module}
