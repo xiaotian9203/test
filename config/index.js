@@ -1,15 +1,18 @@
-const config = {
+var config = {
     local: {
-        apiHost: 'localhost:4000'
+        apiHost: '',
+        assetsHost: 'http://localhost:4000'
     },
     staging: {
-        apiHost: ''
+        apiHost: '',
+        assetsHost: 'http://localhost:4400'
     },
     prod: {
-        apiHost: ''
+        apiHost: '',
+        assetsHost: 'http://localhost:4400'
     }
 };
-let localConfig = null;
+var localConfig = null;
 
 try{
     localConfig = require('./local');
@@ -19,7 +22,7 @@ try{
 }
 
 
-exports.getConfig = (argv) => {
+exports.getConfig = function(argv){
     if(argv.prod){
         return config.prod;
     }else if(argv.staging){

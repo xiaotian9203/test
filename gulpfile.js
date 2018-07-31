@@ -4,13 +4,11 @@ var less = require('gulp-less');
 var pug = require('gulp-pug');
 var changed = require('gulp-changed');
 var bom = require('gulp-bom');
-var rename = require('gulp-rename');
 var liveReload = require('gulp-livereload');
 var replace = require('gulp-replace');
 var yArgs = require('yargs');
 var autoPrefix = require('gulp-autoprefixer');
 var sourceMaps = require('gulp-sourcemaps');
-var fs = require('fs');
 var queue = require('streamqueue');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
@@ -30,43 +28,31 @@ var watch = require('gulp-watch');
 var ecstatic = require('ecstatic');
 var gulpUtil = require('gulp-util');
 var http = require('http');
-var stream = require('stream');
-var source = require('vinyl-source-stream');
 
 var config = require('./config/index').getConfig(yArgs.argv);
 
 var build = {
-    configSrc: 'config',
-    localConfigFile: './config/local.js',
     dist: 'dist/',
-    langDist: './dist/lang',
-    langSrc: './lang/code',
     assetsSrc: 'assets/**/*.*',
     lessSrc: [
-        'src/component/**/*.less',
+        'src/components/**/*.less',
         'src/style/**/*.less',
     ],
-    jadeTemplateSrc: 'src/component/**/*.jade',
+    pugTemplateSrc: 'src/component/**/*.pug',
     TEMPLATE_HEADER: 'angular.module("<%= module %>", []).run(["$templateCache", function($templateCache) {',
-    jadeEntrySrc: 'src/*.jade',
+    pugEntrySrc: 'src/*.pug',
     jsLibSrc: [
         "node_modules/jquery/dist/jquery.js",
         "node_modules/angular/angular.js",
-        "node_modules/angular-animate/angular-animate.js",
-        "node_modules/angular-sanitize/angular-sanitize.js",
-        "node_modules/angular-cookies/angular-cookies.js",
-        "node_modules/angular-translate/dist/angular-translate.js",
-        "node_modules/angular-translate/dist/angular-translate-loader-partial/angular-translate-loader-partial.js",
-        "node_modules/angular-translate/dist/angular-translate-storage-cookie/angular-translate-storage-cookie.js",
-        "node_modules/angular-translate/dist/angular-translate-storage-local/angular-translate-storage-local.js",
     ],
+    jsConfigSrc: 'src/app.js',
     jsSrc: [
-        'src/component/**/*.js',
+        'src/components/**/*.js',
+        'src/routes/**/*.js',
         'src/script/**/*.js',
     ],
     imgHashFile: 'image-hash.json',
     cssJsHashFile: 'rev-css-js-manifest.json',
-    uiPreviewSrc: 'ui-preview/**/*.*',
     liveReloadCode: '//- ##inject-live-reload##',
     liveReloadScript: 'script(src="http://localhost:35729/livereload.js?snipver=1")'
 };
@@ -99,55 +85,12 @@ gulp.task('assets', function () {
 });
 
 /**
- * 多语言翻译文本
+ * less合并并转成css
  */
-gulp.task('lang', function () {
-    return del(build.langDist + '/**').then(function () {
-        var hash = '';
-        var hashA = require('hasha');
-        fs.readdirSync(build.langSrc).forEach(function (name) {
-            var temp = hashA.fromFileSync(build.langSrc + '/' + name);
-            hash += temp.substr(0, 4);
-        });
-        var appFile = './src/app.js';
-        var text = fs.readFileSync(appFile).toString();
-        var updated = text.replace(/lang\/{lang}\/{part}\w+.json/,
-            'lang/{lang}/{part}' + hash + '.json');
-        fs.writeFileSync(appFile, updated);
-        var files = fs.readdirSync(build.langSrc);
-
-        var tasks = [];
-
-        files.forEach(function (file) {
-            var path = build.langSrc + '/' + file;
-            var match = file.match(/(\w+)\.js$/);
-            if (fs.statSync(path).isFile() && match) {
-                var lang = match[1];
-                var langCode = eval(fs.readFileSync(build.langSrc + '/' + file)
-                    .toString().replace('module.exports', 'langCode'));
-                var dir = build.langDist + '/' + lang;
-                tasks.push(new Promise(function (resolve) {
-                    var readable = new stream.Readable();
-                    var text = JSON.stringify(langCode);
-                    readable.push(text);
-                    readable.push(null);
-                    readable.pipe(source(dir + '/main' + hash + '.json'))
-                        .pipe(gulp.dest('.'))
-                        .on('end', resolve);
-                }));
-
-
-            }
-        });
-        return Promise.all(tasks);
-    });
-});
-
-
-gulp.task('lessMain', function () {
+gulp.task('less', function () {
     return gulp.src(build.lessSrc)
         .pipe(gulpIf(!isDev(), order(build.lessSrc)))
-        .pipe(concat('index.less'))
+        .pipe(concat('bundle.less'))
         .pipe(less())
         .on('error', shallowError)
         .pipe(autoPrefix())
@@ -155,52 +98,32 @@ gulp.task('lessMain', function () {
         .pipe(gulp.dest(build.dist))
         .pipe(liveReload());
 });
-gulp.task('preview', function () {
-    return gulp.src(build.previewSrc)
-        .pipe(gulpIf(function (e) {
-            return e.path.endsWith('.less');
-        }, less()))
-        .on('error', shallowError)
-        .pipe(gulp.dest(build.previewDist));
-});
-gulp.task('less', ['lessMain', 'preview']);
 
-
-gulp.task('jadeEntry', function () {
-    var originHost = 'localhost';
-    var replaceHost = '';
-    if (isDev()) {
-        try {
-            var content = fs.readFileSync(build.localConfigFile).toString();
-            var reg = /(?:\d{1,3}\.){3}\d{1,3}/;
-            var match = content.match(reg);
-            if (match) {
-                replaceHost = match[0];
-            }
-        } catch (e) {
-            console.info('no need to replace local url');
-        }
-    }
-    return gulp.src(build.jadeEntrySrc)
+/**
+ * 入口的index.pug单独专程index.html
+ */
+gulp.task('pugEntry', function () {
+    return gulp.src(build.pugEntrySrc)
         .pipe(gulpIf(isDev(), replace(build.liveReloadCode, build.liveReloadScript)))
-        .pipe(jade())
+        .pipe(pug())
         .on('error', shallowError)
-        .pipe(gulpIf(replaceHost.length > 0,
-            replace(originHost, replaceHost))
-        )
-        .pipe(replace('##DICT_URL##', config.dictUrl))
         .pipe(replace('##ASSETS_HOST##', config.assetsHost))
         .pipe(bom())
         .pipe(gulp.dest(build.dist))
         .pipe(liveReload());
 });
-gulp.task('jadeTemplate', function () {
+
+/**
+ * 其他组件和路由的模板pug将会转成html
+ * 并使用gulp-angular-templatecache压成一本template.js
+ */
+gulp.task('pugTemplate', function () {
     // 开发才在这里合并模板，发布环境这里不合并，要等到后续进行文件hash替换后再进行合并
     // 开发环境下不会替换文件hash，所以在这里合并
     return isDev()
         ?
-        gulp.src(build.jadeTemplateSrc)
-            .pipe(jade())
+        gulp.src(build.pugTemplateSrc)
+            .pipe(pug())
             .on('error', shallowError)
             .pipe(templateCache('template.js', {
                 templateHeader: build.TEMPLATE_HEADER,
@@ -209,19 +132,24 @@ gulp.task('jadeTemplate', function () {
             .pipe(gulp.dest(build.dist + 'template/'))
             .pipe(liveReload())
         :
-        gulp.src(build.jadeTemplateSrc)
-            .pipe(jade())
+        gulp.src(build.pugTemplateSrc)
+            .pipe(pug())
             .on('error', shallowError)
             .pipe(gulp.dest(build.dist + 'html/'));
 
 });
-gulp.task('jade', ['jadeEntry', 'jadeTemplate']);
+/**
+ * 真正的pug任务包含pugEntry和pugTemplate
+ */
+gulp.task('pug', ['pugEntry', 'pugTemplate']);
 
-
-gulp.task('jsLib', function () {
+/**
+ * 第三库的脚本合并
+ */
+gulp.task('jsVendor', function () {
     return gulp.src(filesExist(build.jsLibSrc))
         .pipe(gulpIf(isDev(), sourceMaps.init()))
-        .pipe(concat('lib.js'))
+        .pipe(concat('vendor.js'))
         .pipe(gulpIf(isDev(), sourceMaps.write(), uglify()))
         .on('error', function (err) {
             gulpUtil.log(gulpUtil.colors.red('[Error]'), err.toString());
@@ -229,16 +157,19 @@ gulp.task('jsLib', function () {
         .pipe(bom())
         .pipe(gulp.dest(build.dist));
 });
-gulp.task('jsMain', ['lang'], function () {
-    var origin = 'window.CF_CONFIG = window.CF_CONFIG || {};';
-    var real = 'window.CF_CONFIG = ' + JSON.stringify(config);
+
+/**
+ * 自己的js代码合并压缩
+ */
+gulp.task('jsBundle', function () {
+    var origin = 'window.CONFIG = window.CONFIG || {};';
+    var real = 'window.CONFIG = ' + JSON.stringify(config);
     var configStream = gulp.src(build.jsConfigSrc)
         .pipe(replace(origin, real));
     var mainStream = gulp.src(build.jsSrc);
-    var entryStream = gulp.src(build.jsEntrySrc);
-    return queue({objectMode: true}, configStream, mainStream, entryStream)
+    return queue({objectMode: true}, configStream, mainStream)
         .pipe(gulpIf(!isDev(), ngAnnotate(), sourceMaps.init()))
-        .pipe(concat('index.js', {newLine: ';///\n'}))
+        .pipe(concat('bundle.js', {newLine: ';///\n'}))
         .pipe(gulpIf(!isDev(), uglify(), sourceMaps.write()))
         .on('error', function (err) {
             gulpUtil.log(gulpUtil.colors.red('[Error]'), err.toString());
@@ -247,22 +178,17 @@ gulp.task('jsMain', ['lang'], function () {
         .pipe(gulp.dest(build.dist))
         .pipe(liveReload());
 });
-gulp.task('libUnit', function () {
-    var src = filesExist(build.libUnitSrc);
-    return isDev()
-        ?
-        gulp.src(src)
-            .pipe(gulp.dest(build.dist + 'lib/'))
-        :
-        gulp.src(src)
-            .pipe(gulpIf(function (e) {
-                return e.path.endsWith('.js');
-            }, uglify(), cleanCss()))
-            .pipe(gulp.dest(build.dist + 'lib/'));
-});
-gulp.task('js', ['jsLib', 'jsMain', 'libUnit']);
+/**
+ * 真正的js任务
+ */
+gulp.task('js', ['jsVendor', 'jsBundle']);
 
-
+/**
+ * hash任务会自动忽略所有字体文件
+ * 计算出所有assets文件的hash并把hash追加到文件名后面
+ * 同时把hash映射记录到指定的临时文件中，后面会用来替换引用该图片的地址
+ * 要等assets完成才能执行
+ */
 gulp.task('imgHashInit', ['assets'], function () {
     return gulp.src(build.dist + 'images/**/*.*')
         .pipe(vinylPaths(function (paths) {
@@ -273,6 +199,10 @@ gulp.task('imgHashInit', ['assets'], function () {
         .pipe(rev.manifest(build.imgHashFile))
         .pipe(gulp.dest(build.dist));
 });
+
+/**
+ * 使用存在文件中的hash映射去替换其他文件中引用图片资源的地址
+ */
 gulp.task('imgHash', ['imgHashInit'], function () {
     var manifest = gulp.src(build.dist + build.imgHashFile);
     return gulp.src([
@@ -289,7 +219,11 @@ gulp.task('imgHash', ['imgHashInit'], function () {
             shell.exec('rm ' + build.dist + build.imgHashFile);
         });
 });
-gulp.task('ngTemplate', ['imgHash', 'jade'], function () {
+
+/**
+ * 发布模式下把组件模板合并
+ */
+gulp.task('ngTemplate', ['imgHash', 'pug'], function () {
     return gulp.src(build.dist + 'html/**/*.html')
         .pipe(templateCache('template.js', {
             templateHeader: build.TEMPLATE_HEADER,
@@ -302,6 +236,10 @@ gulp.task('ngTemplate', ['imgHash', 'jade'], function () {
             shell.exec('rm -rf ' + build.dist + 'html');
         });
 });
+
+/**
+ * 为css和js资源也生成hash
+ */
 gulp.task('cssJsHashInit', ['ngTemplate', 'js', 'less'], function () {
     return gulp.src([
         build.dist + '**/*.css',
@@ -315,6 +253,10 @@ gulp.task('cssJsHashInit', ['ngTemplate', 'js', 'less'], function () {
         .pipe(rev.manifest(build.cssJsHashFile))
         .pipe(gulp.dest(build.dist));
 });
+
+/**
+ * 引用css,js的地方也要替换成hash
+ */
 gulp.task('release', ['cssJsHashInit'], function () {
     var manifest = gulp.src(build.dist + build.cssJsHashFile);
     return gulp.src(build.dist + '*.html')
@@ -328,62 +270,31 @@ gulp.task('release', ['cssJsHashInit'], function () {
         });
 });
 
-
-gulp.task('uiPreview', function () {
-    gulp.src('ui-preview/**/*.less')
-        .pipe(concat('index.less'))
-        .pipe(less())
-        .on('error', shallowError)
-        .pipe(autoPrefix())
-        .pipe(bom())
-        .pipe(gulp.dest('dist/ui-preview/'));
-    gulp.src('ui-preview/**/*.jade')
-        .pipe(gulpIf(isDev(), replace(build.liveReloadCode, build.liveReloadScript)))
-        .pipe(jade())
-        .on('error', shallowError)
-        .pipe(bom())
-        .pipe(gulp.dest('dist/ui-preview/'));
-    gulp.src('ui-preview/**/*.js')
-        .pipe(sourceMaps.init())
-        .pipe(concat('index.js'))
-        .pipe(sourceMaps.write())
-        .pipe(bom())
-        .pipe(gulp.dest('dist/ui-preview/'));
-});
-gulp.task('uiPreviewLib', function () {
-    gulp.src(filesExist('node_modules/prismjs/themes/prism-okaidia.css'))
-        .pipe(rename('lib.css'))
-        .pipe(bom())
-        .pipe(gulp.dest('dist/ui-preview/'));
-    return gulp.src(filesExist([
-        'node_modules/prismjs/prism.js',
-        'node_modules/prismjs/components/prism-markup.js',
-        'node_modules/prismjs/components/prism-css.js',
-        'node_modules/prismjs/components/prism-clike.js',
-        'node_modules/prismjs/components/prism-javascript.js',
-        'node_modules/prismjs/components/prism-pug.js',
-    ])).pipe(concat('lib.js'))
-        .pipe(bom())
-        .pipe(gulp.dest('dist/ui-preview/'));
-});
-
+/**
+ * 清除dist目录
+ */
 gulp.task('clean', function () {
     var distRoot = build.dist.substr(0, build.dist.length - 1);
     return del([build.dist + '**', '!' + distRoot], {force: true});
 });
 
-
+/**
+ * 构建
+ */
 gulp.task('build', function () {
     return new Promise(function (resolve) {
         if (isDev()) {
-            runSequence('clean', 'config',
-                ['assets', 'less', 'jade', 'js', 'uiPreview', 'uiPreviewLib'], resolve);
+            runSequence('clean',
+                ['assets', 'less', 'pug', 'js'], resolve);
         } else {
             runSequence('clean', 'release', resolve);
         }
     });
 });
 
+/**
+ * 开发模式下启动服务
+ */
 gulp.task('serve', ['build'], function () {
     liveReload.listen();
     watch(build.assetsSrc, function () {
@@ -392,26 +303,17 @@ gulp.task('serve', ['build'], function () {
     watch(build.lessSrc, function () {
         runSequence('less');
     });
-    watch(build.jadeTemplateSrc, function () {
-        runSequence('jadeTemplate');
+    watch(build.pugTemplateSrc, function () {
+        runSequence('pugTemplate');
     });
-    watch(build.jadeEntrySrc, function () {
-        runSequence('jadeEntry');
+    watch(build.pugEntrySrc, function () {
+        runSequence('pugEntry');
     });
-    watch(build.jsEntrySrc.concat(build.jsSrc).concat(build.jsConfigSrc), function () {
-        runSequence('jsMain');
-    });
-    watch(build.previewSrc, function () {
-        runSequence('preview');
-    });
-    watch('lang/code/*.js', function () {
-        runSequence('lang');
-    });
-    watch(build.uiPreviewSrc, function () {
-        runSequence('uiPreview');
+    watch(build.jsSrc.concat(build.jsConfigSrc), function () {
+        runSequence('jsBundle');
     });
 
-    var port = yArgs.argv.p || 10003;
+    var port = yArgs.argv.p || 4000;
     http.createServer(ecstatic({
         root: __dirname + '/dist',
         cors: true,
