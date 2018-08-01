@@ -1,9 +1,9 @@
-html
+html(ng-app='MyAPP')
     head
         link(rel='stylesheet' href='##ASSETS_HOST##/bundle.css')
-    body
-        span 哈哈
-        .app
         script(src='##ASSETS_HOST##/vendor.js')
+        script(src='##ASSETS_HOST##/template.js')
         script(src='##ASSETS_HOST##/bundle.js')
+    body
+        .view(ng-view)
         //- ##inject-live-reload##

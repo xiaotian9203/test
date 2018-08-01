@@ -1,4 +1,4 @@
 
-Pratice.controller('loginController', function () {
+MyAPP.controller('loginController', function () {
 
 });

@@ -1,3 +1,3 @@
-Pratice.service('apiManager', function () {
+MyAPP.service('apiManager', function () {
     this.name = 'haha';
 });

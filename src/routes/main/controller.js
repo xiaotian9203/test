@@ -1,4 +1,4 @@
 
-Pratice.controller('MainController', function () {
+MyAPP.controller('MainController', function () {
 
 });

@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "angular": "^1.7.2",
+    "angular-route": "^1.7.2",
     "del": "^3.0.0",
     "ecstatic": "^3.2.1",
     "files-exist": "^1.1.0",

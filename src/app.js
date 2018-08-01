@@ -2,12 +2,12 @@
 window.CONFIG = window.CONFIG || {};
 
 /**
- * @name Pratice
+ * @name MyAPP
  * @type {angular.Module}
  */
-window.Pratice = angular.module('Pratice', ['ngRoute']);
+window.MyAPP = angular.module('MyAPP', ['ngRoute', 'templates']);
 
-Pratice.config(function($routeProvider, $locationProvider) {
+MyAPP.config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/', {
         templateUrl: 'routes/login/template.html',
         controller: 'LoginController'

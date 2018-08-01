@@ -38,12 +38,16 @@ var build = {
         'src/components/**/*.less',
         'src/style/**/*.less',
     ],
-    pugTemplateSrc: 'src/component/**/*.pug',
+    pugTemplateSrc: [
+        'src/components/**/*.pug',
+        'src/routes/**/*.pug',
+    ],
     TEMPLATE_HEADER: 'angular.module("<%= module %>", []).run(["$templateCache", function($templateCache) {',
     pugEntrySrc: 'src/*.pug',
     jsLibSrc: [
         "node_modules/jquery/dist/jquery.js",
         "node_modules/angular/angular.js",
+        "node_modules/angular-route/angular-route.js",
     ],
     jsConfigSrc: 'src/app.js',
     jsSrc: [
@@ -129,7 +133,7 @@ gulp.task('pugTemplate', function () {
                 templateHeader: build.TEMPLATE_HEADER,
             }))
             .pipe(bom())
-            .pipe(gulp.dest(build.dist + 'template/'))
+            .pipe(gulp.dest(build.dist))
             .pipe(liveReload())
         :
         gulp.src(build.pugTemplateSrc)
@@ -229,7 +233,7 @@ gulp.task('ngTemplate', ['imgHash', 'pug'], function () {
             templateHeader: build.TEMPLATE_HEADER,
         }))
         .pipe(bom())
-        .pipe(gulp.dest(build.dist + 'template/'))
+        .pipe(gulp.dest(build.dist))
         .on('end', function () {
             // 结束后删除零散的模板文件及目录，
             // 后续任务并不需要等待删除结束才进行
