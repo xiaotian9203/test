@@ -1,3 +1,6 @@
-MyAPP.service('apiManager', function () {
-    this.name = 'haha';
+MyAPP.service('apiManager', function ($cookies) {
+
+
+
+
 });

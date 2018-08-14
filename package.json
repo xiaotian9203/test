@@ -1,4 +1,15 @@
 {
+  "name": "test",
+  "version": "1.0.0",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "dependencies": {
     "angular": "^1.7.2",
     "angular-route": "^1.7.2",
@@ -31,15 +42,5 @@
     "streamqueue": "^1.1.2",
     "vinyl-paths": "^2.1.0",
     "yargs": "^12.0.1"
-  },
-  "name": "test",
-  "version": "1.0.0",
-  "main": "gulpfile.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  }
 }

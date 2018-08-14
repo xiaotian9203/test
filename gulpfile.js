@@ -36,11 +36,13 @@ var build = {
     assetsSrc: 'assets/**/*.*',
     lessSrc: [
         'src/components/**/*.less',
+        'src/routes/**/*.less',
         'src/style/**/*.less',
     ],
     pugTemplateSrc: [
-        'src/components/**/*.pug',
-        'src/routes/**/*.pug',
+        'src/**/*.pug',
+        'src/**/*.pug',
+        '!src/index.pug'
     ],
     TEMPLATE_HEADER: 'angular.module("<%= module %>", []).run(["$templateCache", function($templateCache) {',
     pugEntrySrc: 'src/*.pug',

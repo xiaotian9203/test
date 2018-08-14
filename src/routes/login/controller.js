@@ -1,4 +1,7 @@
 
-MyAPP.controller('loginController', function () {
+MyAPP.controller('LoginController', function ($scope) {
 
+    $scope.ckLogin = function () {
+
+    }
 });

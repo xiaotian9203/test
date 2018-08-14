@@ -1,0 +1,3 @@
+MyAPP.service('login', function () {
+
+});
